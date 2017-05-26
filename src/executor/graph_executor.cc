@@ -9,6 +9,9 @@
 #include <vector>
 #include <algorithm>
 
+#include <iostream>
+using namespace std;
+
 #include "./exec_pass.h"
 #include "./graph_executor.h"
 #include "../engine/profiler.h"
@@ -57,6 +60,7 @@ void GraphExecutor::Backward(const std::vector<NDArray>& head_grads) {
       }
     }
   }
+  cout << "backwarding in GraphExecutor\n";
   RunOps(true, num_forward_nodes_, idx.num_nodes());
 }
 
@@ -791,8 +795,12 @@ void GraphExecutor::RunOps(bool is_train, size_t topo_start, size_t topo_end) {
     opnode.exec->op_ctx.is_train = is_train;
   }
 
+  cout << "backwarding in GraphExecutor RunOps\n";
+  op_count = 0;
   // Push Ops
   for (size_t nid = topo_start; nid < topo_end; ++nid) {
+    op_count += 1;
+    cout << "operation " << op_count << endl;
     auto seg_op = cached_seg_opr_[nid];
     // Check segments first
     if (monitor_callback_ == nullptr && seg_op.opr != nullptr && seg_op.topo_end <= topo_end) {

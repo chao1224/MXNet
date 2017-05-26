@@ -200,6 +200,10 @@ class Executor(object):
         >>> print(texec.grad_arrays[1].asnumpy())
         [ 4.  7.]
         """
+        print 'backwarding in executor'
+        print '-------------------------'
+        print '-------------------------'
+
         if out_grads is None:
             out_grads = []
         elif isinstance(out_grads, NDArray):
@@ -215,6 +219,7 @@ class Executor(object):
             self.handle,
             mx_uint(len(out_grads)),
             ndarray))
+        print 'iiiiiiiiiiiiiiner ', out_grads
 
         if not self._output_dirty:
             warnings.warn(

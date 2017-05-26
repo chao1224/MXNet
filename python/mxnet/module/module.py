@@ -547,6 +547,12 @@ class Module(BaseModule):
             This parameter is only needed when bind is called
             on outputs that are not a loss function.
         """
+        print '-------------------------'
+        print '-------------------------'
+        print 'backwarding in module'
+        print '-------------------------'
+        print '-------------------------'
+
         assert self.binded and self.params_initialized
         self._exec_group.backward(out_grads=out_grads)
 
