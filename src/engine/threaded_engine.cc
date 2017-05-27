@@ -9,6 +9,8 @@
 #include <algorithm>
 #include <condition_variable>
 #include <mutex>
+#include <iostream>
+using namespace std;
 #include <utility>
 #include "./threaded_engine.h"
 #include "../common/cuda_utils.h"
@@ -256,6 +258,7 @@ void ThreadedEngine::DeleteOperator(OprHandle op) {
 }
 
 void ThreadedEngine::Push(OprHandle op, Context exec_ctx, int priority, bool profiling) {
+  cout << "Engine Push " << endl;
   ThreadedOpr* threaded_opr = ThreadedOpr::CastFromBase(op);
   OprBlock* opr_block = OprBlock::New();
   opr_block->opr = threaded_opr;

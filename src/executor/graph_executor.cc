@@ -796,7 +796,7 @@ void GraphExecutor::RunOps(bool is_train, size_t topo_start, size_t topo_end) {
   }
 
   cout << "backwarding in GraphExecutor RunOps\n";
-  op_count = 0;
+  int op_count = 0;
   // Push Ops
   for (size_t nid = topo_start; nid < topo_end; ++nid) {
     op_count += 1;
@@ -809,6 +809,7 @@ void GraphExecutor::RunOps(bool is_train, size_t topo_start, size_t topo_end) {
 #else
       bool profiling = false;
 #endif
+      cout << "engine  " << typeid(seg_op.opr).name()  << endl;
       Engine::Get()->Push(seg_op.opr, seg_op.ctx, 0, profiling);
       nid = seg_op.topo_end - 1;
       continue;
