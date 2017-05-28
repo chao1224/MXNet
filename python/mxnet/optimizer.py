@@ -331,10 +331,12 @@ class SGD(Optimizer):
         self.momentum = momentum
 
     def create_state(self, index, weight):
+        print 'Using SGD ------------------------ Create',
         if self.momentum == 0.0:
+            print
             return None
         else:
-            print 'Using SGD ------------------------ Create'
+            print 'Use momentum'
             return zeros(weight.shape, weight.context, dtype=weight.dtype)
 
     def update(self, index, weight, grad, state):

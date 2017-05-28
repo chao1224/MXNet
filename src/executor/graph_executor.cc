@@ -61,6 +61,7 @@ void GraphExecutor::Backward(const std::vector<NDArray>& head_grads) {
     }
   }
   cout << "backwarding in GraphExecutor\n";
+  cout << "num_forward_nodes_\t" << num_forward_nodes_ << "\tidx.num_nodes()\t" << idx.num_nodes() << endl;
   RunOps(true, num_forward_nodes_, idx.num_nodes());
 }
 
@@ -809,7 +810,8 @@ void GraphExecutor::RunOps(bool is_train, size_t topo_start, size_t topo_end) {
 #else
       bool profiling = false;
 #endif
-//      cout << "engine  " << typeid(seg_op.opr).name()  << endl;
+      cout << "engine  " << typeid(seg_op.opr).name() << "\t" << seg_op.opr << endl;
+      cout << "working on nid   " << nid << endl;
       Engine::Get()->Push(seg_op.opr, seg_op.ctx, 0, profiling);
       nid = seg_op.topo_end - 1;
       continue;

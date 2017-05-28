@@ -202,7 +202,6 @@ class Executor(object):
         """
         print 'backwarding in executor'
         print '-------------------------'
-        print '-------------------------'
 
         if out_grads is None:
             out_grads = []
@@ -215,11 +214,11 @@ class Executor(object):
             if not isinstance(obj, NDArray):
                 raise TypeError("inputs must be NDArray")
         ndarray = c_array(NDArrayHandle, [item.handle for item in out_grads])
+        print 'inner       ', type(self.handle)
         check_call(_LIB.MXExecutorBackward(
             self.handle,
             mx_uint(len(out_grads)),
             ndarray))
-        print 'iiiiiiiiiiiiiiner ', out_grads
 
         if not self._output_dirty:
             warnings.warn(
