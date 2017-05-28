@@ -154,6 +154,7 @@ class Optimizer(object):
         """
 
     def update(self, index, weight, grad, state):
+        print 'update'
         """Updates the given parameter using the corresponding gradient and state.
 
         Parameters
@@ -333,6 +334,7 @@ class SGD(Optimizer):
         if self.momentum == 0.0:
             return None
         else:
+            print 'Using SGD ------------------------ Create'
             return zeros(weight.shape, weight.context, dtype=weight.dtype)
 
     def update(self, index, weight, grad, state):
