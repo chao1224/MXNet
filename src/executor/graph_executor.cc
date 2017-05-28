@@ -94,6 +94,7 @@ nnvm::NodeEntry AttrHint(nnvm::NodeEntry src, nnvm::NodeEntry like) {
 
 nnvm::NodeEntry AggregateGradient(std::vector<nnvm::NodeEntry>&& v) {
   using nnvm::Op;
+  cout << "Aggregating gradients " << endl;
   static size_t inplace_sum_cap = dmlc::GetEnv("MXNET_EXEC_INPLACE_GRAD_SUM_CAP", 8);
   static const Op* ewise_plus_op = Op::Get("_grad_add");
   static const Op* ewise_sum_op = Op::Get("ElementWiseSum");
@@ -208,7 +209,9 @@ nnvm::Graph GraphExecutor::InitFullGraph(
   std::vector<NodePtr> args = symbol.ListInputs(nnvm::Symbol::kReadOnlyArgs);
   std::vector<NodeEntry> xs;
   for (size_t i = 0; i < grad_req_type.size(); ++i) {
+    cout << "n grad count " << i << endl;
     if (grad_req_type[i] != kNullOp) {
+      cout << "n grad count " << i << " not Null OP" << endl;
       grad_store_.emplace_back(
           std::make_pair(grad_req_type[i], arg_grad_store[i]));
       xs.emplace_back(NodeEntry{args[i], 0, 0});
