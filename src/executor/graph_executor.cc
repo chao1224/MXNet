@@ -800,7 +800,7 @@ void GraphExecutor::RunOps(bool is_train, size_t topo_start, size_t topo_end) {
   // Push Ops
   for (size_t nid = topo_start; nid < topo_end; ++nid) {
     op_count += 1;
-    cout << "operation " << op_count << endl;
+//    cout << "operation " << op_count << endl;
     auto seg_op = cached_seg_opr_[nid];
     // Check segments first
     if (monitor_callback_ == nullptr && seg_op.opr != nullptr && seg_op.topo_end <= topo_end) {
@@ -809,7 +809,7 @@ void GraphExecutor::RunOps(bool is_train, size_t topo_start, size_t topo_end) {
 #else
       bool profiling = false;
 #endif
-      cout << "engine  " << typeid(seg_op.opr).name()  << endl;
+//      cout << "engine  " << typeid(seg_op.opr).name()  << endl;
       Engine::Get()->Push(seg_op.opr, seg_op.ctx, 0, profiling);
       nid = seg_op.topo_end - 1;
       continue;
