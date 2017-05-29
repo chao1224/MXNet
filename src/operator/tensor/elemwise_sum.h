@@ -14,6 +14,8 @@
 #include "../elemwise_op_common.h"
 #include "../mshadow_op.h"
 #include "../mxnet_op.h"
+#include <iostream>
+using namespace std;
 
 namespace mxnet {
 namespace op {
@@ -41,6 +43,7 @@ void ElementWiseSumCompute_(const nnvm::NodeAttrs& attrs,
                             const std::vector<OpReqType>& req,
                             const std::vector<TBlob>& out_data) {
   using namespace mxnet_op;
+  //cout << id_data[0].shape << endl;
   if (req[0] == kNullOp) return;
   size_t size = in_data.size();
   Stream<xpu> *s = ctx.get_stream<xpu>();

@@ -11,6 +11,8 @@
 #include "../mxnet_op.h"
 #include "../operator_common.h"
 #include "../tensor/broadcast_reduce_op.h"
+#include <iostream>
+using namespace std;
 
 namespace mxnet {
 namespace op {
@@ -89,6 +91,7 @@ inline void SoftmaxGrad(Stream<cpu> *s, DType *out, DType *ograd,
   sshape[axis] = 1;
   index_t sa = stride[axis];
 
+  cout << "NN/softmax\t" << shape << endl;
   #pragma omp parallel for
   for (int i = 0; i < N; ++i) {
     index_t base = unravel_dot(i, sshape, stride);

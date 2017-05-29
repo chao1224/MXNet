@@ -107,7 +107,8 @@ class FullyConnectedOp : public Operator {
     const TShape& ishape = in_data[fullc::kData].shape_;
     const TShape& oshape = out_grad[fullc::kOut].shape_;
 
-cout << "backward in fully connected" << "\tin gradient shape\t" << in_grad[fullc::kData].shape_ << endl;
+cout << "backward in fully connected" << "\tin gradient shape\t" << in_grad[fullc::kData].shape_;
+cout << "\tout gradient shape\t" << oshape << endl;
 
     Tensor<xpu, 2, DType> data = in_data[fullc::kData].get_with_shape<xpu, 2, DType>(
         Shape2(ishape[0], ishape.ProdShape(1, ishape.ndim())), s);
