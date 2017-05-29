@@ -16,6 +16,9 @@
 #include "./operator_common.h"
 #include "./elemwise_op_common.h"
 
+#include <iostream>
+using namespace std;
+
 
 namespace mxnet {
 namespace op {
@@ -103,6 +106,8 @@ class FullyConnectedOp : public Operator {
     Stream<xpu> *s = ctx.get_stream<xpu>();
     const TShape& ishape = in_data[fullc::kData].shape_;
     const TShape& oshape = out_grad[fullc::kOut].shape_;
+
+cout << "backward in fully connected" << "\tin gradient shape\t" << in_grad[fullc::kData].shape_ << endl;
 
     Tensor<xpu, 2, DType> data = in_data[fullc::kData].get_with_shape<xpu, 2, DType>(
         Shape2(ishape[0], ishape.ProdShape(1, ishape.ndim())), s);

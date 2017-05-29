@@ -24,6 +24,7 @@ DMLC_REGISTER_PARAMETER(ElementWiseSumParam);
 std::vector<nnvm::NodeEntry> ElementWiseSumGrad(
     const nnvm::NodePtr& n,
     const std::vector<nnvm::NodeEntry>& ograds) {
+//    cout << "------------------COmpute gradients" << endl;
   // identity constraints in the beginning for easier shape inference.
   const nnvm::Op* copy_op =
       nnvm::Op::Get("identity");

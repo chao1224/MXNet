@@ -16,6 +16,8 @@
 #include <vector>
 #include <utility>
 #include "./operator_common.h"
+#include <iostream>
+using namespace std;
 
 namespace mxnet {
 namespace op {
@@ -118,6 +120,7 @@ class SoftmaxOutputOp : public Operator {
     CHECK_GE(in_grad.size(), 1U);
     CHECK_GE(req.size(), 1U);
     Stream<xpu> *s = ctx.get_stream<xpu>();
+cout << "backward in CNN" << "\tin gradient shape\t" << out_data[softmaxout_enum::kOut].shape_ << endl;
 
     if (out_data[softmaxout_enum::kOut].shape_ ==
         in_data[softmaxout_enum::kLabel].shape_) {

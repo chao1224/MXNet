@@ -22,6 +22,8 @@
 #include <utility>
 #include "./operator_common.h"
 #include "./nn/im2col.h"
+#include <iostream>
+using namespace std;
 
 
 namespace mxnet {
@@ -163,6 +165,8 @@ class ConvolutionOp : public Operator {
                         const std::vector<TBlob>& aux_args) {
     using namespace mshadow;
     using namespace mshadow::expr;
+    cout << "backward in CNN" << "\tin gradient shape\t" << in_grad[conv::kData].shape_ << endl;
+
     CHECK_EQ(out_grad.size(), 1U);
     size_t expected = param_.no_bias == 0 ? 3 : 2;
     CHECK(in_data.size() == expected && in_grad.size() == expected);

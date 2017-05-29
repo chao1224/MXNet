@@ -134,7 +134,7 @@ cout << "gradient size is " << v.size() << endl;
       sum_node->attrs.dict["num_args"] = std::to_string(v.size());
       sum_node->attrs.op->attr_parser(&(sum_node->attrs));
       sum_node->inputs = std::move(v);
-cout << sum_node->attrs.op << "   ---===---   " << sum_node->attrs.name << endl;
+cout << "During ElementWiseSumGrad\t" << sum_node->attrs.op << "   ---===---   " << sum_node->attrs.name << endl;
       return nnvm::NodeEntry{sum_node, 0, 0};
     } else {
       // use a stream line of plus instead
