@@ -123,6 +123,7 @@ nnvm::NodeEntry AggregateGradient(std::vector<nnvm::NodeEntry>&& v) {
   if (begin == 0) begin = 1;
   v.resize(begin);
 
+cout << "gradient size is " << v.size() << endl;
   if (v.size() == 1) {
     return std::move(v[0]);
   } else {
@@ -133,6 +134,7 @@ nnvm::NodeEntry AggregateGradient(std::vector<nnvm::NodeEntry>&& v) {
       sum_node->attrs.dict["num_args"] = std::to_string(v.size());
       sum_node->attrs.op->attr_parser(&(sum_node->attrs));
       sum_node->inputs = std::move(v);
+cout << sum_node->attrs.op << "  " << sum_node->attrs.name << endl;
       return nnvm::NodeEntry{sum_node, 0, 0};
     } else {
       // use a stream line of plus instead
@@ -150,6 +152,7 @@ nnvm::NodeEntry AggregateGradient(std::vector<nnvm::NodeEntry>&& v) {
         v[i].node->control_deps.push_back(ret.node);
 
         std::ostringstream os;
+        cout << "Summerzie gradients " << i << endl;
         os << "sum_grad_" << i;
         nnvm::NodePtr x = nnvm::Node::Create();
         x->attrs.op = ewise_plus_op;
@@ -687,6 +690,7 @@ void GraphExecutor::InitCachedOps() {
 }
 
 void GraphExecutor::InitOpSegs() {
+cout << "Init Op Segments" << endl;
   size_t total_num_nodes = graph_.indexed_graph().num_nodes();
   cached_seg_opr_.clear();
   CachedSegOpr p;
@@ -813,8 +817,8 @@ void GraphExecutor::RunOps(bool is_train, size_t topo_start, size_t topo_end) {
 #else
       bool profiling = false;
 #endif
-      cout << "engine  " << typeid(seg_op.opr).name() << "\t" << seg_op.opr << endl;
-      cout << "working on nid   " << nid << endl;
+      cout << "engine  " << typeid(seg_op.opr).name() << "\t" << seg_op.opr;
+      cout << "\tworking on nid   " << nid << endl;
       Engine::Get()->Push(seg_op.opr, seg_op.ctx, 0, profiling);
       nid = seg_op.topo_end - 1;
       continue;

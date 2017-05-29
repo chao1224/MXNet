@@ -5,6 +5,9 @@
 */
 #include "./elemwise_sum.h"
 
+#include <iostream>
+using namespace std;
+
 namespace mxnet {
 namespace op {
 
@@ -27,7 +30,10 @@ std::vector<nnvm::NodeEntry> ElementWiseSumGrad(
   CHECK_EQ(ograds.size(), 1);
   std::vector<nnvm::NodeEntry> ret;
   nnvm::NodeEntry n_out{n, 0, 0};
+
+
   for (size_t i = 0; i < n->inputs.size(); i++) {
+    cout << "-=-=-=-=-=-=-=-=-=--=------ Num of gradients " << n->inputs.size() << endl;
     nnvm::NodePtr id_node = nnvm::Node::Create();
     id_node->attrs.op = copy_op;
     id_node->inputs = {ograds[0]};
@@ -79,6 +85,7 @@ NNVM_REGISTER_OP(add_n)
 .set_attr<FCompute>("FCompute<cpu>", ElementWiseSumCompute<cpu>)
 .set_attr<nnvm::FInplaceOption>(
     "FInplaceOption", [](const NodeAttrs& attrs) {
+cout << "In-place compute sum  " << endl;
       return std::vector<std::pair<int, int> >{{0, 0}};
     })
 .set_attr<nnvm::FInferShape>("FInferShape", ElementWiseSumShape)

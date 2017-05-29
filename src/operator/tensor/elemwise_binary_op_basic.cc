@@ -6,6 +6,9 @@
 #include "./elemwise_unary_op.h"
 #include "./elemwise_binary_op.h"
 
+#include <iostream>
+using namespace std;
+
 namespace mxnet {
 namespace op {
 MXNET_OPERATOR_REGISTER_BINARY(elemwise_add)
@@ -25,6 +28,7 @@ NNVM_REGISTER_OP(_backward_add)
 .set_attr<nnvm::TIsBackward>("TIsBackward", true)
 .set_attr<nnvm::FInplaceOption>("FInplaceOption",
   [](const NodeAttrs& attrs){
+  cout << "[inner]    _grad_add" << endl;
     return std::vector<std::pair<int, int> >{{0, 0}, {0, 1}};
   })
 .set_attr<FCompute>("FCompute<cpu>", BinaryBackwardUseNone<cpu, mshadow_op::identity,

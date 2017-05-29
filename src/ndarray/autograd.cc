@@ -11,6 +11,8 @@
 #include <iostream>
 #include "../executor/graph_executor.h"
 #include "./autograd.h"
+#include <iostream>
+using namespace std;
 
 namespace mxnet {
 namespace autograd {
@@ -136,6 +138,7 @@ AGNodePtr AutogradRuntime::RecordOp(const nnvm::Op* op,
 }
 
 void AutogradRuntime::ComputeGradient(const std::vector<NDArray>& outputs) {
+
   static auto& fmutate_inputs = nnvm::Op::GetAttr<nnvm::FMutateInputs>("FMutateInputs");
   std::vector<AGNodeEntry> heads;
   Symbol sym;
