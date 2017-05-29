@@ -94,7 +94,7 @@ nnvm::NodeEntry AttrHint(nnvm::NodeEntry src, nnvm::NodeEntry like) {
 
 nnvm::NodeEntry AggregateGradient(std::vector<nnvm::NodeEntry>&& v) {
   using nnvm::Op;
-  cout << "Aggregating gradients " << endl;
+  cout << "Aggregating gradients during Init  " << endl;
   static size_t inplace_sum_cap = dmlc::GetEnv("MXNET_EXEC_INPLACE_GRAD_SUM_CAP", 8);
   static const Op* ewise_plus_op = Op::Get("_grad_add");
   static const Op* ewise_sum_op = Op::Get("ElementWiseSum");
@@ -134,7 +134,7 @@ cout << "gradient size is " << v.size() << endl;
       sum_node->attrs.dict["num_args"] = std::to_string(v.size());
       sum_node->attrs.op->attr_parser(&(sum_node->attrs));
       sum_node->inputs = std::move(v);
-cout << sum_node->attrs.op << "  " << sum_node->attrs.name << endl;
+cout << sum_node->attrs.op << "   ---===---   " << sum_node->attrs.name << endl;
       return nnvm::NodeEntry{sum_node, 0, 0};
     } else {
       // use a stream line of plus instead
@@ -808,7 +808,7 @@ void GraphExecutor::RunOps(bool is_train, size_t topo_start, size_t topo_end) {
   // Push Ops
   for (size_t nid = topo_start; nid < topo_end; ++nid) {
     op_count += 1;
-//    cout << "operation " << op_count << endl;
+// cout << "operation " << op_count << endl;
     auto seg_op = cached_seg_opr_[nid];
     // Check segments first
     if (monitor_callback_ == nullptr && seg_op.opr != nullptr && seg_op.topo_end <= topo_end) {
@@ -817,8 +817,10 @@ void GraphExecutor::RunOps(bool is_train, size_t topo_start, size_t topo_end) {
 #else
       bool profiling = false;
 #endif
-      cout << "engine  " << typeid(seg_op.opr).name() << "\t" << seg_op.opr;
-      cout << "\tworking on nid   " << nid << endl;
+
+cout << "engine  " << typeid(seg_op.opr).name() << "\t" << seg_op.opr;
+cout << "\tworking on nid   " << nid << "\t" << seg_op.exec_list.front()->exec_type() << endl;
+
       Engine::Get()->Push(seg_op.opr, seg_op.ctx, 0, profiling);
       nid = seg_op.topo_end - 1;
       continue;
