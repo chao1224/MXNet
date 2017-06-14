@@ -22,6 +22,7 @@
 #include <utility>
 #include "./operator_common.h"
 #include "./nn/im2col.h"
+#include <fstream>
 #include <iostream>
 using namespace std;
 
@@ -165,9 +166,9 @@ class ConvolutionOp : public Operator {
                         const std::vector<TBlob>& aux_args) {
     using namespace mshadow;
     using namespace mshadow::expr;
-    cout << "backward in CNN" << "\tin gradient shape\t" << in_grad[conv::kData].shape_;
-    cout << "\tconv kData: " << conv::kData << "\tconv kOut: " << conv::kOut;
-    cout << "\tnum_ is " << num_ << "\tgourp_ is" << group_ << endl;
+cout << "backward in CNN" << "\tin gradient shape " << in_grad[conv::kData].shape_ << "\tout gradient shape " << out_grad[conv::kData].shape_;
+cout << "\tconv kData: " << conv::kData << "\tconv kOut: " << conv::kOut;
+cout << "\tnum_ is " << num_ << "\tgroup_ is " << group_ << endl;
 
     CHECK_EQ(out_grad.size(), 1U);
     size_t expected = param_.no_bias == 0 ? 3 : 2;
@@ -188,11 +189,16 @@ class ConvolutionOp : public Operator {
     // create a column buffer using workspace and col_buffer_shape
     TBlob col_buffer(workspace.dptr_, col_buffer_shape, xpu::kDevMask, DataType<DType>::kFlag);
 
+
+
+
+
     // initialize weight and col_buffer 3D tensors for using gemm
     // For computing dLoss/d(in_data[kData])
     index_t M = kernel_dim_;
     index_t N = conv_out_spatial_dim_;
     index_t K = conv_out_channels_ / group_;
+cout << "M\t" << M <<"\tN\t" << N << "\tK\t" << K <<endl;
     Tensor<xpu, 3, DType> weight_3d = in_data[conv::kWeight].get_with_shape<xpu, 3, DType>(
       Shape3(group_, K, M), s);
     Tensor<xpu, 4, DType> out_grad_4d = out_grad[conv::kOut].get_with_shape<xpu, 4, DType>(
@@ -209,6 +215,22 @@ class ConvolutionOp : public Operator {
       for (index_t g = 0; g < group_; ++g) {
         col_buffer_3d[g] = dot(weight_3d[g].T(), out_grad_3d[g]);
       }
+
+auto * data_dd = out_grad_3d.dptr_;
+cout << "This is number " << n << ":\t";
+cout << "shape " << out_grad_3d.shape_ << "\t" << out_grad_3d.shape_[0] << "\t";
+cout << data_dd[0] << ", " << data_dd[N*K-1] << ", " << data_dd[N*K] << ", " << &data_dd[N*K] ;
+cout << endl;
+
+ofstream out_file("out.txt", ios::app);
+if (out_file.is_open()) {
+    for (int i=0; i<N*K;i++) {
+        out_file << data_dd[i] << ", ";
+    }
+    out_file << endl;
+    out_file.close();
+}
+
       col2im(s, col_buffer.dptr<DType>(), in_grad[conv::kData].shape_, col_buffer.shape_,
              param_.kernel, param_.pad, param_.stride, param_.dilate,
              in_grad[conv::kData].dptr<DType>()+n*input_dim_, req[conv::kData]);

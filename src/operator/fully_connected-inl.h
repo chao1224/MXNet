@@ -124,6 +124,9 @@ cout << "\tout gradient shape\t" << oshape << endl;
     CHECK_NE(req[fullc::kWeight], kWriteInplace) << "cannot write weight inplace";
     // gradient of weight
     Tensor<xpu, 2, DType> gwmat = in_grad[fullc::kWeight].get<xpu, 2, DType>(s);
+
+//cout << gwmat.shape_ << endl;
+
     Assign(gwmat, req[fullc::kWeight], dot(grad.T(), data));
     // gradient of bias
     if (!param_.no_bias) {
