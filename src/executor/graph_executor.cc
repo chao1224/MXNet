@@ -94,7 +94,7 @@ nnvm::NodeEntry AttrHint(nnvm::NodeEntry src, nnvm::NodeEntry like) {
 
 nnvm::NodeEntry AggregateGradient(std::vector<nnvm::NodeEntry>&& v) {
   using nnvm::Op;
-  cout << "Aggregating gradients during Init  " << endl;
+//  cout << "Aggregating gradients during Init  " << endl;
   static size_t inplace_sum_cap = dmlc::GetEnv("MXNET_EXEC_INPLACE_GRAD_SUM_CAP", 8);
   static const Op* ewise_plus_op = Op::Get("_grad_add");
   static const Op* ewise_sum_op = Op::Get("ElementWiseSum");
@@ -123,7 +123,7 @@ nnvm::NodeEntry AggregateGradient(std::vector<nnvm::NodeEntry>&& v) {
   if (begin == 0) begin = 1;
   v.resize(begin);
 
-cout << "gradient size is " << v.size() << endl;
+//cout << "gradient size is " << v.size() << endl;
   if (v.size() == 1) {
     return std::move(v[0]);
   } else {
@@ -134,7 +134,7 @@ cout << "gradient size is " << v.size() << endl;
       sum_node->attrs.dict["num_args"] = std::to_string(v.size());
       sum_node->attrs.op->attr_parser(&(sum_node->attrs));
       sum_node->inputs = std::move(v);
-cout << "During ElementWiseSumGrad\t" << sum_node->attrs.op << "   ---===---   " << sum_node->attrs.name << endl;
+//cout << "During ElementWiseSumGrad\t" << sum_node->attrs.op << "   ---===---   " << sum_node->attrs.name << endl;
       return nnvm::NodeEntry{sum_node, 0, 0};
     } else {
       // use a stream line of plus instead
@@ -152,7 +152,7 @@ cout << "During ElementWiseSumGrad\t" << sum_node->attrs.op << "   ---===---   "
         v[i].node->control_deps.push_back(ret.node);
 
         std::ostringstream os;
-        cout << "Summerzie gradients " << i << endl;
+//        cout << "Summerzie gradients " << i << endl;
         os << "sum_grad_" << i;
         nnvm::NodePtr x = nnvm::Node::Create();
         x->attrs.op = ewise_plus_op;
@@ -212,9 +212,9 @@ nnvm::Graph GraphExecutor::InitFullGraph(
   std::vector<NodePtr> args = symbol.ListInputs(nnvm::Symbol::kReadOnlyArgs);
   std::vector<NodeEntry> xs;
   for (size_t i = 0; i < grad_req_type.size(); ++i) {
-    cout << "n grad count " << i << endl;
+//    cout << "n grad count " << i << endl;
     if (grad_req_type[i] != kNullOp) {
-      cout << "n grad count " << i << " not Null OP" << endl;
+//      cout << "n grad count " << i << " not Null OP" << endl;
       grad_store_.emplace_back(
           std::make_pair(grad_req_type[i], arg_grad_store[i]));
       xs.emplace_back(NodeEntry{args[i], 0, 0});
@@ -818,8 +818,8 @@ void GraphExecutor::RunOps(bool is_train, size_t topo_start, size_t topo_end) {
       bool profiling = false;
 #endif
 
-cout << "engine  " << typeid(seg_op.opr).name() << "\t" << seg_op.opr;
-cout << "\tworking on nid   " << nid << "\t" << seg_op.exec_list.front()->exec_type() << endl;
+// cout << "engine  " << typeid(seg_op.opr).name() << "\t" << seg_op.opr;
+// cout << "\tworking on nid   " << nid << "\t" << seg_op.exec_list.front()->exec_type() << endl;
 
       Engine::Get()->Push(seg_op.opr, seg_op.ctx, 0, profiling);
       nid = seg_op.topo_end - 1;
