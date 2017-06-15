@@ -198,7 +198,7 @@ cout << "\tnum_ is " << num_ << "\tgroup_ is " << group_ << endl;
     index_t M = kernel_dim_;
     index_t N = conv_out_spatial_dim_;
     index_t K = conv_out_channels_ / group_;
-cout << "M\t" << M <<"\tN\t" << N << "\tK\t" << K <<endl;
+//cout << "M\t" << M <<"\tN\t" << N << "\tK\t" << K <<endl;
     Tensor<xpu, 3, DType> weight_3d = in_data[conv::kWeight].get_with_shape<xpu, 3, DType>(
       Shape3(group_, K, M), s);
     Tensor<xpu, 4, DType> out_grad_4d = out_grad[conv::kOut].get_with_shape<xpu, 4, DType>(
@@ -217,12 +217,13 @@ cout << "M\t" << M <<"\tN\t" << N << "\tK\t" << K <<endl;
       }
 
 auto * data_dd = out_grad_3d.dptr_;
-cout << "This is number " << n << ":\t";
-cout << "shape " << out_grad_3d.shape_ << "\t" << out_grad_3d.shape_[0] << "\t";
-cout << data_dd[0] << ", " << data_dd[N*K-1] << ", " << data_dd[N*K] << ", " << &data_dd[N*K] ;
-cout << endl;
+//cout << "This is number " << n << ":\t";
+//cout << "shape " << out_grad_3d.shape_ << "\t" << out_grad_3d.shape_[0] << "\t";
+//cout << data_dd[0] << ", " << data_dd[N*K-1] << ", " << data_dd[N*K] << ", " << &data_dd[N*K] ;
+//cout << endl;
 
 ofstream out_file("out.txt", ios::app);
+out_file << n << ", ";
 if (out_file.is_open()) {
     for (int i=0; i<N*K;i++) {
         out_file << data_dd[i] << ", ";
